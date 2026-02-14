@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Conversation Practice</title>
+<link rel="stylesheet" href="stylesession.css">
+</head>
+<body>
+
+<header>
+    <h2>🤖 Mirror Talk</h2>
+</header>
+
+<section class="section">
+
+    <div class="robot-circle"></div>
+    <h1>AI Partner Ready</h1>
+    <p>Tap the mic and start speaking.</p>
+
+    <div class="chat-box" id="chatBox"></div>
+
+    <input type="text" id="userInput" placeholder="Type or speak..." 
+           style="width:60%; padding:10px; border-radius:8px; border:none;">
+
+    <button onclick="sendMessage()" class="btn">Send</button>
+
+    <!-- 🎤 Microphone button -->
+    <button onclick="startListening()" class="mic-btn">🎤</button>
+
+    <br><br>
+    <a href="practice.html" class="btn">End Practice</a>
+
+</section>
+
+<script>
+function sendMessage() {
+    const input = document.getElementById("userInput");
+    const message = input.value.trim();
+    if(message === "") return;
+
+    addMessage(message, "user");
+    input.value = "";
+
+    const reply = getAIResponse(message);
+    setTimeout(() => {
+        addMessage(reply, "ai");
+        speak(reply);
+    }, 500);
+}
+
+function addMessage(text, sender) {
+    const chatBox = document.getElementById("chatBox");
+    const msgDiv = document.createElement("div");
+    msgDiv.className = "message " + sender;
+    msgDiv.innerText = text;
+    chatBox.appendChild(msgDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// 🎤 Speech Recognition
+function startListening() {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = "en-US";
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        const speechText = event.results[0][0].transcript;
+        document.getElementById("userInput").value = speechText;
+        sendMessage();
+    };
+
+    recognition.onerror = function() {
+        alert("Mic not detected. Please allow microphone access.");
+    };
+}
+
+// AI responses
+// AI responses
+function getAIResponse(msg) {
+    msg = msg.toLowerCase();
+
+    // 💖 Confessing feelings
+    if(msg.includes("like someone") || msg.includes("confess") || msg.includes("tell someone i like"))
+        return "Be honest and simple. You can say, 'I enjoy spending time with you and I wanted to share how I feel.'";
+
+    if(msg.includes("express feelings"))
+        return "Speak from the heart and keep it simple. Honest words create genuine connections.";
+
+    // 🙏 Apologizing to a friend
+    if(msg.includes("apologize") || msg.includes("sorry") || msg.includes("hurt my friend"))
+        return "A sincere apology includes taking responsibility and expressing regret. You can say, 'I’m really sorry for what I did. I value our friendship.'";
+
+    if(msg.includes("fight with my friend"))
+        return "Try saying, 'I didn’t mean to hurt you. Our friendship is important to me and I want to fix things.'";
+
+    // 🤝 Making friends
+    if(msg.includes("make friends"))
+        return "Start with a smile and ask simple questions like where are you from or what do you enjoy doing.";
+
+    if(msg.includes("first meeting"))
+        return "You can ask what they like to do in their free time or how they know the host.";
+
+    // 😰 Nervousness
+    if(msg.includes("nervous"))
+        return "It's normal to feel nervous. Take a slow breath and speak slowly. You are doing great.";
+
+    // 💬 Starting conversation
+    if(msg.includes("start conversation"))
+        return "Try saying hello and asking how their day has been. Simple open questions work best.";
+
+    // 👋 Greetings
+    if(msg.includes("hello") || msg.includes("hi"))
+        return "Hello! I'm here to help you practice conversations.";
+
+    return "That’s a great question! Try asking open-ended questions and listen actively.";
+}
+
+
+
+function speak(text) {
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.rate = 1;
+    speech.pitch = 1;
+    speechSynthesis.speak(speech);
+}
+</script>
+
+</body>
+</html>
